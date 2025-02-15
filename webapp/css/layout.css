@@ -1,0 +1,1122 @@
+:root {
+    --color-surface:              #000000;
+    --color-on-surface:           #ffffff;
+    --color-primary:              #7b7b7b;
+    --color-on-primary:           #333333;
+    --color-primary-container:    #4b4b4b;
+    --color-on-primary-container: #bbbbbb;
+    --color-secondary:            #7b7b7b;
+    --color-on-secondary:         #333333;
+
+    /* colors used in buttons and pads */
+    --color-orange:               #ffaa00;
+    --color-red:                  #ff0000;
+    --color-green:                #00ff00;
+    --color-blue:                 #0000ff;
+    --color-dark-gray:            #808080;
+    --color-btn-feedback:         #ffffff40;
+}
+
+html,
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+
+    /* this is to avoid a page reload on swipe down */
+    overscroll-behavior: none;
+    user-select: none;
+    overflow-y: hidden;
+
+    font-family: 'Roboto';
+    font-size: 2.4vh;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+
+    @media (orientation: portrait) {
+        overflow: hidden;
+    }
+}
+
+body {
+    display: grid;
+}
+
+select,
+input[type="text"],
+input[type="number"] {
+    background-color: transparent;
+    color: var(--color-on-surface);
+    padding: 1.3rch;
+    padding-right: 4rch;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.75rch;
+    text-overflow: ellipsis;
+    font-size: inherit;
+
+    appearance: none;
+    background-image: url("/img/caret-down.svg");
+    background-repeat: no-repeat;
+    background-position: right 2rch center;
+    background-size: 1.5rch;
+}
+
+option {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+}
+
+input[type="text"],
+input[type="number"] {
+    background-image: none;
+    padding-right: 1.3rch;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked + label.switch::after {
+    --color-on-bg: var(--color-surface);
+
+    left: calc(var(--width) - calc(var(--height) * var(--scale)) - var(--dot-margin));
+}
+
+input[type="checkbox"]:checked + label.switch {
+    background-color: var(--color-green);
+}
+
+.widget-on-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.widget-on-left {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+}
+
+label.switch {
+    --width: 7ch;
+    --height: calc(var(--width) / 2);
+    --color-bg: var(--color-on-surface);
+    --color-on-bg: var(--color-surface);
+
+    position: relative;
+    display: inline-block;
+    font-size: inherit;
+    width: var(--width);
+    height: var(--height);
+    background-color: var(--color-bg);
+    border-radius: var(--height);
+}
+
+label.switch::after {
+    --scale: 0.83;
+    --dot-margin: calc(calc(var(--height) * calc(1 - var(--scale))) / 2);
+
+    content: '';
+    position: absolute;
+    width: calc(var(--height) * var(--scale));
+    top: var(--dot-margin);
+    left: var(--dot-margin);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: var(--color-on-bg);
+    transition: all 0.3s;
+}
+
+#portrait-msg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+
+    @media (orientation: landscape) {
+        display: none;
+    }
+
+    @media (orientation: portrait) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3em;
+    }
+}
+
+#portrait-msg h1 {
+    font-size: 1.5em;
+    text-align: center;
+    display: flex;
+    gap: 2ch;
+}
+
+#app-container {
+    /* 'top-bar-h' variable will be modified, so keep a copy of the actual value here */
+    --top-bar-h-initial: 10.5vh;
+    --top-bar-h: 10.5vh;
+    --top-bar-buttons: 10;
+    --icons-scale: 0.65;
+
+    position: relative;
+    display: grid;
+    grid-template-areas:
+        "top-bar"
+        "app-content";
+    grid-template-rows: var(--top-bar-h) 1fr;
+
+    @media (orientation: portrait) {
+        display: none;
+    }
+}
+
+#app-bar {
+    grid-area: top-bar;
+    min-height: fit-content;
+    padding: 0 2ch;
+    background-color: var(--color-primary-container);
+
+    display: grid;
+    grid-template-columns: repeat(var(--top-bar-buttons), 1fr);
+}
+
+#show-pads-button,
+#show-controls-button {
+    margin: 0px 0.25ch;
+}
+
+#app-bar button,
+#app-bar-toggle {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--color-on-primary-container);
+    background-color: transparent;
+    border: 0;
+    font-size: calc(var(--top-bar-h) * var(--icons-scale));
+}
+
+#app-bar-toggle {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: var(--top-bar-h-initial);
+    height: calc(100vh / var(--top-bar-buttons));
+    min-height: fit-content;
+    z-index: 10;
+
+    font-size: calc(var(--top-bar-h-initial) * var(--icons-scale));
+}
+
+#app-bar-toggle::after {
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    width: calc(var(--top-bar-h-initial) * 0.9);
+    height: calc(var(--top-bar-h-initial) * 0.9);
+    z-index: -1;
+
+    content: "";
+    background-color: var(--color-primary-container);
+    border-radius: 50%;
+}
+
+#app-bar button.active {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.app-area {
+    grid-area: app-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* scroll app using top-bar, avoid scrolling inside area to allow sliders to work */
+    touch-action: none;
+}
+
+.under-construction {
+    font-size: 2em;
+}
+
+.popover-int {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 1rch;
+    row-gap: 0.7rch;
+}
+
+.popover-int > span {
+    grid-column: 1 / 4;
+    justify-self: start;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.popover-int > button {
+    --border-radius: 0.75rch;
+
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+    border: 2px solid var(--fg-color);
+    padding: 1.3rch;
+}
+
+.popover-int > button:first-of-type {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.popover-int > button:last-of-type {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.popover-int > input {
+    border-left: none;
+    border-radius: 0;
+    border-right: none;
+    border-color: var(--fg-color);
+    font-size: 1.2rem;
+    width: 5ch;
+    color: var(--fg-color);
+}
+
+.tippy-tooltip.nakama-theme,
+.tippy-tooltip.nakama-theme .tippy-backdrop  {
+    --bg-color: white;
+    --fg-color: var(--color-surface);
+
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+}
+
+.tippy-tooltip.nakama-theme[data-animatefill] {
+    background-color: transparent;
+}
+
+.tippy-tooltip.nakama-theme .tippy-roundarrow {
+    fill: var(--bg-color);
+    transform: scale(1.5);
+}
+
+/* -- PADs area ---------------------------------------------------------------------- */
+
+#pads-area {
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    @media (min-aspect-ratio: 1.45) {
+        grid-template-columns: auto auto;
+    }
+
+    justify-items: center;
+    justify-content: center;
+    margin: 0 1ch;
+}
+
+#pa-pads-array {
+    --margin: 3.5rch;
+    --gap: 2.1rch;
+
+    width: calc(100% - var(--gap));
+
+    @media (min-aspect-ratio: 1.45) {
+        width: auto;
+        height: calc(100% - 2 * var(--margin));
+    }
+
+    gap: var(--gap);
+    margin: var(--margin) var(--gap) var(--margin) 0;
+}
+
+.btn-pad {
+    --border-size: 1.5vh;
+    --border-color: var(--color-secondary);
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+
+    background-color: transparent;
+    border: var(--border-size) solid var(--border-color);
+    border-radius: 13%;
+    aspect-ratio: 1 / 1;
+    color: var(--border-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rch;
+}
+
+.btn-pad.active,
+.btn-row-launch.active {
+    background-color: var(--color-btn-feedback);
+}
+
+.btn-row-launch {
+    --border-size: 0.8vh;
+    --border-color: var(--color-secondary);
+
+    background-color: transparent;
+    border: var(--border-size) solid var(--border-color);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    width: 7rch;
+    align-self: center;
+    justify-self: flex-start;
+}
+
+#pa-controls {
+    display: grid;
+    gap: 1rch;
+    grid-template-areas:
+        "rec     stop    play "
+        "up-down up-down .    "
+        "up-down up-down cc   "
+        "shift   shift   vel  ";
+}
+
+/* put these rules inside a layer to allow less specific (but more important) rules
+   override them. */
+@layer {
+    #pa-controls .btn {
+        --border-size: 0.8vh;
+        --border-color: var(--color-secondary);
+        --fg-color: var(--color-orange);
+        --fa-inverse: var(--color-surface);
+
+        background-color: transparent;
+        border: var(--border-size) solid var(--border-color);
+        border-radius: 1.6rch;
+        color: var(--fg-color);
+        font-size: 1.1rem;
+        font-weight: bold;
+        padding: 1rch;
+        min-height: 7rch;
+    }
+
+    #pa-controls .btn.active {
+        background-color: var(--color-btn-feedback);
+    }
+}
+
+.pa-up-down-group {
+    --fg-color: var(--color-orange);
+
+    grid-area: up-down;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rch 0;
+
+    color: var(--fg-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#pa-rec-btn {
+    --fg-color: var(--color-on-primary-container);
+    grid-area: rec;
+}
+
+#pa-stop-btn {
+    --fg-color: var(--color-on-primary-container);
+    grid-area: stop;
+}
+
+#pa-play-btn {
+    --fg-color: var(--color-on-primary-container);
+    grid-area: play;
+}
+
+#pa-inc-offset-btn {
+    --fg-color: var(--color-on-primary-container);
+    --border-size: 0;
+}
+
+#pa-dec-offset-btn {
+    --fg-color: var(--color-on-primary-container);
+    --border-size: 0;
+}
+
+#pa-pad1-note {
+    position: relative;
+}
+
+#pa-root-note-label {
+    color: var(--color-secondary);
+    position: absolute;
+    left: -3ch;
+}
+
+#pa-offset-label {
+    display: inline-block;
+    width: 5ch;
+    text-align: center;
+}
+
+#pa-cc-btn {
+    grid-area: cc;
+    font-size: 1.5em;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+}
+
+#pa-cc-btn.active,
+#pa-vel-btn.active {
+    --border-color: var(--fg-color);
+    background-color: var(--fg-color);
+    color: var(--color-surface);
+}
+
+#pa-vel-btn {
+    grid-area: vel;
+    font-size: 1.5em;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+}
+
+.pad-vel-overlay {
+    --border-color: var(--color-secondary);
+    --border-size: 1.5vh;
+
+    position: absolute;
+    top: calc(-1 * var(--border-size));
+    left: calc(-1 * var(--border-size));
+    width: calc(100% + 1px);
+    height: calc(100% + 1px);
+    background-color: var(--color-surface);
+    border: var(--border-size) solid var(--border-color);
+    border-radius: 13%;
+}
+
+.pad-vel-overlay.active {
+    --border-color: var(--color-on-surface);
+}
+
+.pad-vel-overlay .vel-bar {
+    --bar-border: 2px;
+    --fill-per: 0.5;
+
+    margin-top: 1.5rch;
+    display: inline-block;
+    position: absolute;
+    left: calc(-1 * var(--border-size));
+
+    width: calc(100% + 2 * var(--border-size) - 2 * var(--bar-border));
+    height: 25%;
+    background-color: var(--color-surface);
+    border: var(--bar-border) solid var(--color-orange);
+}
+
+.pad-vel-overlay .vel-bar::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+
+    height: 100%;
+    width: calc(100% * var(--fill-per));
+    background-color: var(--color-orange);
+}
+
+.pad-vel-overlay .vel-bar::after {
+    --slider-w: 1.3rch;
+
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: calc(100% * var(--fill-per) - calc(var(--slider-w) / 2));
+    top: calc(-3 * var(--bar-border));
+    border-radius: 1rch;
+
+    height: calc(100% + 6 * var(--bar-border));
+    width: var(--slider-w);
+    background-color: var(--color-blue);
+}
+
+.pad-vel-overlay .vel-number {
+    display: inline-block;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    color: var(--color-on-surface);
+    font-size: 2rem;
+    padding-top: 2rch;
+}
+
+#pa-shift-btn {
+    --border-color: var(--color-blue);
+
+    grid-area: shift;
+    font-size: 1.5em;
+}
+
+#pa-shift-btn.active {
+    background-color: var(--border-color);
+    color: var(--color-surface);
+}
+
+#pa-shift-btn.active.lock {
+    border-color: var(--color-orange);
+}
+
+/* -- Settings area ------------------------------------------------------------------ */
+
+#settings-area {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "menu section";
+    justify-content: start;
+    align-items: start;
+    justify-items: start;
+}
+
+#sa-sections-menu {
+    --fg-color: var(--color-on-primary-container);
+    --bg-color: var(--color-primary-container);
+
+    grid-area: menu;
+    height: 100%;
+    width: 14ch;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5ch;
+
+    color: var(--fg-color);
+    background-color: var(--bg-color);
+    font-size: 1.5em;
+}
+
+#sa-sections-menu > div {
+    padding: 0.5ch 1.5ch 0.5ch 2ch;
+    text-align: right;
+}
+
+#sa-sections-menu > div.active {
+    color: var(--color-on-primary);
+    background-color: var(--color-primary);
+    font-weight: bold;
+}
+
+#sa-sections-menu hr {
+    width: 100%;
+    margin: 0;
+    border: 1px solid var(--fg-color);
+    border-bottom: none;
+}
+
+#sa-sections-menu .v-span {
+    height: 100%;
+}
+
+#sa-sections-menu hr:first-child,
+#sa-sections-menu :last-child {
+    margin-bottom: 1ch;
+}
+
+/* put these rules inside a layer to allow less specific (but more important) rules
+   override them. */
+@layer {
+    #settings-area > .section {
+        --margin: 3.5rch;
+        --col-gap: 4rch;
+        --row-gap: 2.5rch;
+
+        grid-area: section;
+        width: calc(100% - 2 * var(--margin));
+        height: calc(100vh - var(--top-bar-h) - 2 * var(--margin));
+        overflow-y: auto;
+        overflow-x: hidden;
+        justify-self: center;
+        padding: var(--margin);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-content: start;
+        row-gap: var(--row-gap);
+        column-gap: var(--col-gap);
+        font-size: 1.3rem;
+
+        @media (min-aspect-ratio: 1.45) {
+            width: 60vw;
+            justify-self: center;
+        }
+    }
+
+    #settings-area .btn {
+        display: inline-grid;
+        align-items: center;
+        justify-items: center;
+        padding: 1rch;
+        aspect-ratio: 1/1;
+
+        background-color: var(--color-on-surface);
+        color: var(--color-surface);
+        font-size: 1.2em;
+        border: none;
+        border-radius: 50%;
+    }
+
+    #settings-area .section .col-left {
+        justify-self: end;
+    }
+
+    #settings-area .section .col-right {
+        margin-right: 2.5rch;
+        font-size: inherit;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #settings-area .section .to-top {
+        align-self: start;
+    }
+
+    #settings-area .section hr {
+        width: 100%;
+        grid-column: 1 / 3;
+        border-color: var(--color-primary);
+        margin: 0;
+    }
+
+    #sa-profile-name > select,
+    #sa-profile-name > input {
+        width: 100%;
+    }
+
+    #sa-profile-name > button {
+        background: transparent;
+        color: var(--color-on-surface);
+        border: 2px solid var(--color-primary);
+        border-radius: 0.75rch;
+        padding: 0 1rch;
+    }
+}
+
+#sa-profile-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rch;
+}
+
+#sa-profile-actions-msg {
+    --color: var(--color-orange);
+
+    grid-column: 1 / 3;
+    font-size: 1rem;
+    border: 1px solid var(--color);
+    padding: 1rch;
+    border-radius: 1rch;
+    margin: 0 2.5rch;
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    justify-items: end;
+    gap: 1ch;
+}
+
+#sa-profile-actions-msg a {
+    color: var(--color-green);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#sa-profile-actions-msg button {
+    background-color: transparent;
+    border: none;
+    color: var(--color-on-surface);
+    font-weight: bold;
+    padding: 0;
+}
+
+#settings-area .btn-add {
+    color: white;
+    background-color: var(--color-green);
+}
+
+#settings-area .btn-del {
+    color: white;
+    background-color: var(--color-red);
+    margin-left: 2rch;
+}
+
+/* -- Settings area / General section -------- */
+
+#sa-general,
+#sa-midi,
+#sa-pads {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+#sa-color-maps-banks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    align-self: start;
+    gap: 1.5rch;
+    margin-top: 2rch;
+}
+
+#sa-color-maps-banks > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rch;
+}
+
+#sa-color-maps-banks > div > div {
+    position: relative;
+    color: var(--color-dark-gray);
+    display: flex;
+    justify-content: space-between;
+    gap: 0.85rch;
+}
+
+#sa-color-maps-banks > div > div.active {
+    color: var(--color-orange);
+}
+
+#sa-color-maps-banks > div > div.active::after {
+    content: '';
+    position: absolute;
+    right: -2.5rch;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.55rch;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: var(--color-orange);
+}
+
+#sa-color-maps-banks > div > div.active > span {
+    color: var(--color-on-surface);
+}
+
+#sa-color-maps {
+    align-self: stretch;
+    justify-content: flex-start;
+}
+
+#sa-color-maps > div {
+    width: 100%;
+    display: grid;
+    gap: 0.5rch;
+    margin: 2rch 0;
+}
+
+#sa-color-maps .btn {
+    --note-color: transparent;
+
+    aspect-ratio: 1/1;
+    padding: 0;
+    position: relative;
+    background-color: var(--note-color);
+    border: 1px solid var(--color-on-surface);
+    border-radius: 0.75rch;
+}
+
+#sa-color-maps .btn.color-picker-active {
+    border: 1px solid var(--color-on-surface) !important;
+    box-shadow:
+        rgba(0, 0, 0, 0.4) 0px 2px 4px,
+        rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+        rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+#sa-color-maps .btn.idx-bl::after,
+#sa-color-maps .btn.idx-br::after,
+#sa-color-maps .btn.idx-tl::after,
+#sa-color-maps .btn.idx-tr::after {
+    position: absolute;
+    font-size: 1rem;
+    content: attr(label);
+    color: var(--color-on-surface);
+}
+
+#sa-color-maps .btn.idx-bl::after,
+#sa-color-maps .btn.idx-br::after {
+    bottom: -2.5rch;
+}
+
+#sa-color-maps .btn.idx-tl::after,
+#sa-color-maps .btn.idx-tr::after {
+    top: -2.5rch;
+}
+
+/* -- Settings area / MIDI section ----------- */
+
+#sa-midi {
+    height: auto;
+}
+
+#sa-midi-in-msg,
+#sa-midi-out-msg {
+    --color: var(--color-red);
+
+    grid-column: 1 / 3;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 1px solid var(--color);
+    padding: 1rch;
+    border-radius: 1rch;
+    margin: 0 2.5rch;
+
+    background-color: var(--color);
+    text-align: center;
+
+    /* display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    justify-items: end;
+    gap: 1ch; */
+}
+
+/* -- Settings area / PADs section ----------- */
+
+#sa-pads {
+    --ch-a-color: var(--color-green);
+    --ch-b-color: var(--color-orange);
+    --row-gap: 2rch;
+}
+
+#sa-pads-channels {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    justify-content: start;
+    column-gap: 2rch;
+    row-gap: 0.5rch;
+}
+
+#sa-pads-channels span {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+#sa-pads-channels span:nth-child(1) { color: var(--ch-a-color); }
+#sa-pads-channels span:nth-child(4) { color: var(--ch-b-color); }
+
+#sa-pads-channels label {
+    font-size: 1rem;
+    color: var(--color-dark-gray);
+}
+
+#sa-pads-map-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-items: start;
+    justify-content: start;
+    column-gap: 1rch;
+}
+
+@layer {
+#sa-pads-map-buttons .btn {
+    --border-size: 0.8vh;
+    --border-color: var(--color-secondary);
+    --fg-color: var(--color-on-primary-container);
+    --fa-inverse: var(--color-surface);
+
+    position: relative;
+    background-color: transparent;
+    border: var(--border-size) solid var(--border-color);
+    border-radius: 1.6rch;
+    color: var(--fg-color);
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.5rch;
+    min-height: 6rch;
+}}
+
+#sa-pads-map-shift-btn {
+    --border-color: var(--color-blue);
+    --fg-color: var(--color-orange);
+
+    aspect-ratio: unset;
+    font-size: 1.4rem;
+    padding: 1rch 2rch;
+}
+
+#sa-pads-map-rl-1-btn,
+#sa-pads-map-rl-2-btn,
+#sa-pads-map-rl-3-btn,
+#sa-pads-map-rl-4-btn {
+    border-radius: 50%;
+    color: var(--border-color);
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+#sa-pads-map-buttons .btn::after {
+    position: absolute;
+    font-size: 1rem;
+    content: attr(cc-num);
+    color: var(--ch-b-color);
+    bottom: -3.5rch;
+}
+
+#sa-pads-map-buttons .cc-box {
+    --left-size: 3.5rch;
+
+    position: relative;
+    grid-column: 1 / 5;
+    width: 100%;
+    height: 2rch;
+    margin: 0.75rch 0;
+
+    border: 1px solid var(--ch-b-color);
+    border-radius: 0.5rch;
+}
+
+#sa-pads-map-buttons .cc-box::after {
+    position: absolute;
+    font-size: 1rem;
+    content: "CC";
+    color: var(--ch-b-color);
+    left: calc(-1 * var(--left-size));
+}
+
+.popover-int {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 1rch;
+    row-gap: 0.7rch;
+}
+
+.popover-int > span {
+    grid-column: 1 / 4;
+    justify-self: start;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.popover-int > button {
+    --border-radius: 0.75rch;
+
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+    border: 2px solid var(--fg-color);
+    padding: 1.3rch;
+}
+
+.popover-int > button:first-of-type {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.popover-int > button:last-of-type {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.popover-int > input {
+    border-left: none;
+    border-radius: 0;
+    border-right: none;
+    border-color: var(--fg-color);
+    font-size: 1.2rem;
+    width: 5ch;
+    color: var(--fg-color);
+}
+
+.tippy-tooltip.nakama-theme,
+.tippy-tooltip.nakama-theme .tippy-backdrop  {
+    --bg-color: white;
+    --fg-color: var(--color-surface);
+
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+}
+
+.tippy-tooltip.nakama-theme[data-animatefill] {
+    background-color: transparent;
+}
+
+.tippy-tooltip.nakama-theme .tippy-roundarrow {
+    fill: var(--bg-color);
+    transform: scale(1.5);
+}
+
+/* -- Settings area / GRID section ----------- */
+/* -- Settings area / CONTROLs section ------- */
+/* -- Settings area / Help section ----------- */
+
+#sa-help {
+    display: grid;
+    grid: auto-flow / 1fr;
+    font-size: 1.15rem;
+}
+
+#sa-help hr {
+    grid-column: auto;
+}
+
+#sa-help-header {
+    display: grid;
+    grid: 1fr / auto-flow;
+}
+
+#sa-help-header img {
+    aspect-ratio: 1 / 1;
+    width: 10rch;
+    margin-right: 3rch;
+}
+
+#sa-help ul,
+#sa-help ul a {
+    color: var(--color-orange);
+    text-decoration: none;
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0;
+}
+
+#sa-help ul li {
+    padding: 0.5rch 0;
+    list-style-position: inside;
+}
+
+#sa-help-log-view {
+    display: grid;
+    grid: auto-flow / 1fr auto auto;
+    align-items: center;
+    row-gap: 1rch;
+}
+
+#sa-help-log-view > textarea {
+    grid-column: 1/4;
+    background-color: transparent;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.75rch;
+    color: var(--color-on-surface);
+    padding: 1rch;
+    font-size: 0.75rem;
+}
+
+#sa-help-restart-btn {
+    background-color: var(--color-red);
+    color: white;
+    font-weight: bold;
+    border-radius: 1.3rch;
+    aspect-ratio: auto;
+    justify-self: center;
+    padding: 0.9rch 3rch;
+    margin-top: 1rch;
+}

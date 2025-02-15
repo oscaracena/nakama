@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+   <title>Zynthian | Nakama</title>
+   <link rel="shortcut icon" href="/img/favicon-512.webp" type="image/webp">
+   <link rel="manifest" href="/manifest.json">
+
+   <link rel="stylesheet" href="/css/fonts.css">
+   <link rel="stylesheet" href="/css/layout.css">
+
+   <!-- placeholder for theme loading -->
+   <link class="theme" rel="stylesheet">
+
+   <!-- low priority stylesheets -->
+   <link rel="stylesheet" href="/css/third-party/coloris.min.css">
+</head>
+
+<body>
+   <div id="portrait-msg">
+      <h1>This APP is made to work in landscape mode. Please, rotate your device.</h1>
+      <hr style="width: 100%;">
+      <h1>
+         <i class="fa-solid fa-2xl fa-mobile-screen"></i>
+         <i class="fa-solid fa-2xl fa-arrow-right"></i>
+         <i class="fa-solid fa-2xl fa-mobile-screen fa-rotate-90"></i>
+      </h1>
+   </div>
+
+   <div id="app-container">
+      <button id="app-bar-toggle" onPointerDown="_ui.toggleTopBar()">
+         <i class="fa-solid fa-ellipsis-vertical"></i></button>
+      <div id="app-bar">
+         <button id="show-pads-button" onPointerDown="_ui.switchArea('pads')">
+            <i class="fa-solid fa-table-cells-large"></i></button>
+         <button id="show-grid-button" onPointerDown="_ui.switchArea('grid')">
+            <i class="fa-solid fa-grid"></i></button>
+         <button id="show-controls-button" onPointerDown="_ui.switchArea('controls')">
+            <i class="fa-solid fa-sliders fa-rotate-90"></i></button>
+         <button id="show-settings-button" onPointerDown="_ui.switchArea('settings')">
+            <i class="fa-solid fa-gears"></i></button>
+      </div>
+
+      <!-- ### PADs Area ############################################################# -->
+
+      <div id="pads-area" class="app-area" style="display: none;">
+         <div id="pa-pads-array"></div>
+         <div id="pa-controls">
+            <button id="pa-rec-btn" class="btn"
+               onPointerUp="_padsCtrl.sendCCMessage('rec')">
+               <i class="fa-solid fa-fw fa-2x fa-circle"></i></button>
+            <button id="pa-stop-btn" class="btn"
+               onPointerUp="_padsCtrl.sendCCMessage('stop')">
+               <span class="fa-layers fa-fw fa-2x">
+                  <i class="fa-solid fa-square"></i>
+                  <i class="fa-inverse fa-solid fa-exclamation"
+                     data-fa-transform="shrink-6"></i>
+               </span></button>
+            <button id="pa-play-btn" class="btn"
+               onPointerUp="_padsCtrl.sendCCMessage('play')">
+               <i class="fa-solid fa-fw fa-2x fa-pause-play"></i></button>
+            <div class="pa-up-down-group">
+               <button id="pa-inc-offset-btn" class="btn"
+                  onPointerDown="_padsCtrl.increasePadOffset(event)">
+                  <i class="fa-solid fa-3x fa-triangle"></i></button>
+               <div id="pa-pad1-note">
+                  <span id="pa-root-note-label">0</span>
+                  <span id="pa-offset-label">+ 0</span>
+               </div>
+               <button id="pa-dec-offset-btn" class="btn"
+                  onPointerDown="_padsCtrl.decreasePadOffset(event)">
+                  <i class="fa-solid fa-3x fa-triangle fa-rotate-180"></i></button>
+            </div>
+            <button id="pa-cc-btn" class="btn"
+               onPointerDown="_padsCtrl.toggleCC(event)">CC</button>
+            <button id="pa-vel-btn" class="btn"
+               onPointerDown="_padsCtrl.toggleVelocity(event)">VEL</button>
+            <button id="pa-shift-btn" class="btn"
+               onPointerDown="_padsCtrl.onShiftPress(event)">SHIFT</button>
+         </div>
+      </div>
+
+      <!-- ### GRID Area ############################################################# -->
+
+      <div id="grid-area" class="app-area" style="display: none;">
+         <div class="under-construction">
+            <b>- GRID area -</b><br>
+            This area is under construction.
+         </div>
+      </div>
+
+      <!-- ### COTROLs Area ########################################################## -->
+
+      <div id="controls-area" class="app-area" style="display: none;">
+         <div class="under-construction">
+            <b>- CONTROLS area -</b><br>
+            This area is under construction.
+         </div>
+      </div>
+
+      <!-- ### Settings Area ######################################################### -->
+
+      <div id="settings-area" class="app-area" style="display: none;">
+         <div id="sa-sections-menu">
+            <hr>
+            <div id="sa-menu-general"
+               onPointerDown="_settingsCtrl.switchSection('general')">General</div>
+            <div id="sa-menu-midi"
+               onPointerDown="_settingsCtrl.switchSection('midi')">MIDI</div>
+            <hr>
+            <div id="sa-menu-pads"
+               onPointerDown="_settingsCtrl.switchSection('pads')">PADs</div>
+            <div id="sa-menu-grid"
+               onPointerDown="_settingsCtrl.switchSection('grid')">GRID</div>
+            <div id="sa-menu-controls"
+               onPointerDown="_settingsCtrl.switchSection('controls')">CONTROLs</div>
+            <div class="v-span"></div>
+            <hr>
+            <div id="sa-menu-help"
+               onPointerDown="_settingsCtrl.switchSection('help')">Help</div>
+         </div>
+
+         <!-- --- Settings: General Section ------------------------------------------ -->
+
+         <div id="sa-general" class="section" style="display: none;">
+            <span class="col-left">Profile:</span>
+            <div class="col-right" id="sa-profile-name">
+               <select class="widget-on-right hide-on-edit"
+                  onChange="_settingsCtrl.onProfileChange(event)"></select>
+               <button class="widget-on-left hide-on-edit"
+                  onPointerDown="_settingsCtrl.enableEditProfileName(true)">
+                  <i class="fa-solid fa-fw fa-lg fa-pencil"></i>
+               </button>
+               <input class="show-on-edit" type="text" style="display: none"
+                  onBlur="_settingsCtrl.onProfileNameEdit(false)"
+                  onChange="_settingsCtrl.onProfileNameEdit(true)">
+            </div>
+            <span class="col-left"></span>
+            <div id="sa-profile-actions" class="col-right">
+               <button class="btn" title="Export current profile"
+                  onPointerDown="_settingsCtrl.exportProfile()">
+                  <i class="fa-solid fa-fw fa-file-arrow-down"></i></button>
+               <button class="btn" title="Import profile from file"
+                  onPointerDown="_settingsCtrl.importProfile()">
+                  <i class="fa-solid fa-fw fa-file-arrow-up"></i></button>
+               <button class="btn" title="Duplicate current profile"
+                  onPointerDown="_settingsCtrl.duplicateProfile()">
+                  <i class="fa-solid fa-fw fa-clone"></i></button>
+               <button class="btn btn-add" title="Add a new profile"
+                  onPointerDown="_settingsCtrl.addProfile()">
+                  <i class="fa-solid fa-fw fa-plus"></i></button>
+               <button class="btn btn-del" title="Delete current profile"
+                  onPointerDown="_settingsCtrl.deleteProfile()">
+                  <i class="fa-solid fa-fw fa-trash-can"></i></button>
+            </div>
+            <div id="sa-profile-actions-msg" style="display: none"></div>
+            <hr>
+            <span class="col-left">Theme:</span>
+            <select id="sa-theme" class="col-right" p-key="ui.theme"
+               onChange="_settingsCtrl.onThemeChange(event)"></select>
+            <span class="col-left">Vibration:</span>
+            <div class="col-right">
+               <input type="checkbox" id="sa-vibrate" p-key="ui.vibration"
+                  onChange="_settingsCtrl.onVibrateChange(event)">
+               <label for="sa-vibrate" class="switch"></label>
+            </div>
+            <div id="sa-color-maps-banks" class="col-left">
+               <span>Color Maps:</span>
+               <div>
+                  <div onPointerDown="_settingsCtrl.showColorPage(this, 1)" class="active">
+                     [<span>0 - 31</span>]</div>
+                  <div onPointerDown="_settingsCtrl.showColorPage(this, 2)">
+                     [<span>32 - 63</span>]</div>
+                  <div onPointerDown="_settingsCtrl.showColorPage(this, 3)">
+                     [<span>64 - 95</span>]</div>
+                  <div onPointerDown="_settingsCtrl.showColorPage(this, 4)">
+                     [<span>96 - 127</span>]</div>
+               </div>
+            </div>
+            <div id="sa-color-maps" class="col-right" p-key="midi.colors">
+               <div id="sa-color-map-1" style="display: none;"></div>
+               <div id="sa-color-map-2" style="display: none;"></div>
+               <div id="sa-color-map-3" style="display: none;"></div>
+               <div id="sa-color-map-4" style="display: none;"></div>
+            </div>
+         </div>
+
+         <!-- --- Settings: MIDI Section --------------------------------------------- -->
+
+         <div id="sa-midi" class="section" style="display: none;">
+            <span class="col-left">Input Port:</span>
+            <select id="sa-midi-in" class="col-right" p-key="midi.in"
+               onChange="_settingsCtrl.onMidiInChange(event)">
+               <option value="">[No port selected]</option>
+            </select>
+            <span id="sa-midi-in-msg" style="display: none"></span>
+            <span class="col-left">Output Port:</span>
+            <select id="sa-midi-out" class="col-right" p-key="midi.out"
+               onChange="_settingsCtrl.onMidiOutChange(event)">
+               <option value="">[No port selected]</option>
+            </select>
+            <span id="sa-midi-out-msg" style="display: none"></span>
+         </div>
+
+         <!-- --- Settings: PADs Section --------------------------------------------- -->
+
+         <div id="sa-pads" class="section" style="display: none;">
+            <span class="col-left">PADs Mode:</span>
+            <select id="sa-pads-mode" class="col-right" p-key="pads.mode"
+               onChange="_settingsCtrl.onPadsModeChange(event)">
+               <option value="note">Note-On / Note-Off</option>
+               <option value="cc">Control Change</option>
+            </select>
+            <span class="col-left">Root Note:</span>
+            <input id="sa-pads-root-note" type="number" min="0" max="112" value="60"
+               pattern="[0-9]+" class="col-right" p-key="pads.root-note"
+               onChange="_settingsCtrl.onIntegerInputChange(event)">
+            <span class="col-left">Velocity / Value:</span>
+            <input id="sa-pads-velocity" type="number" min="0" max="127" value="63"
+               pattern="[0-9]+" class="col-right" p-key="pads.velocity"
+               onChange="_settingsCtrl.onIntegerInputChange(event)">
+            <hr>
+            <span class="col-left to-top">Channels:</span>
+            <div class="col-right" id="sa-pads-channels">
+               <span>A</span>
+               <input id="sa-pads-channel-a" type="number" value="0" size="2"
+                  min="0" max="15" pattern="[0-9]+" p-key="pads.channel-a"
+                  onChange="_settingsCtrl.onIntegerInputChange(event)">
+               <label>(PADs)</label>
+               <span>B</span>
+               <input id="sa-pads-channel-b" type="number" value="1" size="2"
+                  min="0" max="15" pattern="[0-9]+" p-key="pads.channel-b"
+                  onChange="_settingsCtrl.onIntegerInputChange(event)">
+               <label>(Aux. Buttons)</label>
+            </div>
+            <span class="col-left to-top">Button Mapping:</span>
+            <div id="sa-pads-map-buttons" class="col-right">
+               <template id="sa-pads-map-tpl">
+                  <div class="popover-int">
+                     <span>CC Number:</span>
+                     <button><i class="fa-solid fa-lg fa-fw fa-minus"></i></button>
+                     <input type="number" value="0" min="0" max="127" size="3">
+                     <button><i class="fa-solid fa-lg fa-fw fa-plus"></i></button>
+                  </div>
+               </template>
+
+               <button id="sa-pads-map-rec-btn" class="btn" cc-num="1"
+                  p-key="pads.map.rec">
+                  <i class="fa-solid fa-fw fa-2x fa-circle"></i></button>
+               <button id="sa-pads-map-stop-btn" class="btn" cc-num="2"
+                  p-key="pads.map.stop">
+                  <span class="fa-layers fa-fw fa-2x">
+                     <i class="fa-solid fa-square"></i>
+                     <i class="fa-inverse fa-solid fa-exclamation"
+                        data-fa-transform="shrink-6"></i>
+                  </span></button>
+               <button id="sa-pads-map-play-btn" class="btn" cc-num="3"
+                  p-key="pads.map.play">
+                  <i class="fa-solid fa-fw fa-2x fa-pause-play"></i></button>
+               <button id="sa-pads-map-shift-btn" class="btn" cc-num="0"
+                  p-key="pads.map.shift">SHIFT</button>
+               <div class="cc-box"></div>
+               <button id="sa-pads-map-rl-1-btn" class="btn" cc-num="4"
+                  p-key="pads.map.row-launch-1">1</button>
+               <button id="sa-pads-map-rl-2-btn" class="btn" cc-num="5"
+                  p-key="pads.map.row-launch-2">2</button>
+               <button id="sa-pads-map-rl-3-btn" class="btn" cc-num="6"
+                  p-key="pads.map.row-launch-3">3</button>
+               <button id="sa-pads-map-rl-4-btn" class="btn" cc-num="7"
+                  p-key="pads.map.row-launch-4">4</button>
+               <div class="cc-box"></div>
+            </div>
+         </div>
+
+         <!-- --- Settings: GRID Section --------------------------------------------- -->
+
+         <div id="sa-grid" class="section" style="display: none;">
+            <div class="under-construction">
+               <b>- GRID section -</b><br>
+               This section is under construction.
+            </div>
+         </div>
+
+         <!-- --- Settings: CONTROLs Section ----------------------------------------- -->
+
+         <div id="sa-controls" class="section" style="display: none;">
+            <div class="under-construction">
+               <b>- CONTROLs section -</b><br>
+               This section is under construction.
+            </div>
+         </div>
+
+         <!-- --- Settings: Help Section --------------------------------------------- -->
+
+         <div id="sa-help" class="section" style="display: none;">
+            <div id="sa-help-header">
+               <img src="/img/favicon-512.webp">
+               <span>
+                  Thanks for using <b>Zynthian Nakama</b>! Here you will find some useful resources
+                  that may help you with this app. If you have any problem or sugestion, feel
+                  free to contact the developers using one of the following tools.
+                  <br><br>
+                  Happy Zynthing!
+               </span>
+            </div>
+            <hr>
+            <ul>
+               <li><a href="">User Manual</a></li>
+               <li><a href="https://discourse.zynthian.org" target="_blank">
+                  Zynthian Forums</a></li>
+               <li><a href="">Issue Tracker</a></li>
+            </ul>
+            <span>
+               Also, if you want to connect this app with Zynthian using Network UMP,
+               this <b>Android</b> app may help you:
+            </span>
+            <ul>
+               <li><a href="https://github.com/oscaracena/net-midi-vd" target="_blank">
+                  Network MIDI 2.0 Virtual Device</a></li>
+            </ul>
+            <hr>
+            <div id="sa-help-log-view">
+               <span>Log Viewer</span>
+               <button class="btn" title="Export logs"
+                  onPointerDown="_settingsCtrl.downloadLogs()">
+                  <i class="fa-solid fa-fw fa-file-arrow-down"></i></button>
+               <button class="btn btn-del" title="Clear logs"
+                  onPointerDown="$('#log-view').val('')">
+                  <i class="fa-solid fa-fw fa-trash-can"></i></button>
+               <textarea id="log-view" rows="25" disabled></textarea>
+            </div>
+            <button id="sa-help-restart-btn" class="btn"
+                  onPointerDown="location.reload()">Restart Zynthian Nakama</button>
+         </div>
+
+      </div>
+   </div>
+
+   <script src="/js/third-party/jquery.min.js"></script>
+   <script src="/js/third-party/fontawesome.js"></script>
+   <script src="/js/third-party/anime.min.js"></script>
+   <script src="/js/third-party/popper.min.js"></script>
+   <script src="/js/third-party/tippy.min.js"></script>
+
+   <script src="/js/utils.js"></script>
+   <script src="/js/custom-fa-icons.js"></script>
+   <script src="/js/ui.js"></script>
+   <script src="/js/settings.js"></script>
+   <script src="/js/midi.js"></script>
+   <script src="/js/pads.js"></script>
+   <script src="/js/main.js"></script>
+
+   <!-- low priority scripts -->
+   <script src="/js/third-party/coloris.min.js"></script>
+</body>
+
+</html>

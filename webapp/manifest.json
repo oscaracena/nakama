@@ -1,0 +1,19 @@
+{
+    "name": "Zynthian | Nakama",
+    "icons": [
+      {
+        "src": "img/favicon-192.webp",
+        "type": "image/webp",
+        "sizes": "192x192"
+      },
+      {
+        "src": "img/favicon-512.webp",
+        "type": "image/webp",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "/",
+    "id": "nakama",
+    "display": "fullscreen",
+    "prefer_related_applications": false
+  }

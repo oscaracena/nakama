@@ -1,0 +1,14 @@
+:root {
+    --color-surface:              #051b29;
+    --color-on-surface:           #c3ceda;
+    --color-primary:              #738fa7;
+    --color-on-primary:           #071330;
+    --color-primary-container:    #0c4160;
+    --color-on-primary-container: #c3ceda;
+
+    /* colors used in buttons and pads */
+    --color-orange:               #ffb300;
+    --color-red:                  #c70000;
+    --color-green:                #5cb03b;
+    --color-blue:                 #1c71d8;
+}
