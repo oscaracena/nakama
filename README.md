@@ -1,7 +1,7 @@
 
 ## Overview
 
-This is a Web MIDI controller. It is designed to work as a companion tool for [Zynthian](https://zynthian.org). See more information in the [user manual](docs/MANUAL.md).
+This is a Web MIDI controller. It is designed to work as a companion tool for [Zynthian](https://zynthian.org). See more information in the [user manual](docs/manual/index.md).
 
 You can **open the app** here: [Nakama](https://oscaracena.github.io/nakama). It does not need installation, but if you install it, you will use all your device available space (no top address bar), so it is recommended.
 

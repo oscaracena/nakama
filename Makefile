@@ -33,3 +33,7 @@ run-a2j-bridge:
 
 install-local-https-webserver:
 	pip install twisted[tls]
+
+deploy:
+	git push origin main:deploy -f
+	xdg-open https://github.com/oscaracena/nakama/deployments
