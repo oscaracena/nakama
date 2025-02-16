@@ -1,19 +1,37 @@
 {
-    "name": "Zynthian | Nakama",
-    "icons": [
-      {
-        "src": "img/favicon-192.webp",
-        "type": "image/webp",
-        "sizes": "192x192"
-      },
-      {
-        "src": "img/favicon-512.webp",
-        "type": "image/webp",
-        "sizes": "512x512"
-      }
-    ],
-    "start_url": "/nakama/",
-    "id": "nakama",
-    "display": "fullscreen",
-    "prefer_related_applications": false
-  }
+  "name": "Zynthian | Nakama",
+  "icons": [
+    {
+      "src": "img/favicon-192.webp",
+      "type": "image/webp",
+      "sizes": "192x192"
+    },
+    {
+      "src": "img/favicon-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/nakama/",
+  "id": "nakama",
+  "display": "fullscreen",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "manual/img/pads-area.png",
+      "sizes": "1885x1501",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PADs area"
+    },
+    {
+      "src": "manual/img/settings-area-general.png",
+      "sizes": "1885x1501",
+      "type": "image/png",
+      "label": "Settings panel"
+    }
+  ]
+}

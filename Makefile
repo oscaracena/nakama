@@ -6,11 +6,11 @@ all:
 
 run:
 	@echo Open the site @ http://127.0.0.1:$(PORT)
-	python3 -m http.server --directory webapp --bind 0.0.0.0 $(PORT)
+	python3 -m http.server --directory docs --bind 0.0.0.0 $(PORT)
 
 run-https:
 	@echo "Open https://127.0.0.1:$(PORT)"
-	@twistd -no web --https=$(PORT) --path=webapp \
+	@twistd -no web --https=$(PORT) --path=docs \
 		-c certs/$(APP_NAME).crt -k certs/$(APP_NAME).key
 
 run-rtpmidid-service:

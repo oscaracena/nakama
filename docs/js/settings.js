@@ -382,6 +382,7 @@ class SettingsController {
       const opt = wg.find(":selected")
       const path = opt.length ? opt.attr("path") : "";
       $("head link.theme").attr("href", path);
+      this.log.debug(`current theme set to '${path}'`);
 
       // save settings only when field is changed by user
       if (ev.isTrusted)
