@@ -1,7 +1,3 @@
-
-// TODO: add haptic feedback on button press
-// TODO: implement pads/row-launch/transpose colors from incoming events
-
 class PadsController {
    log = new Logger("PadsCtrl");
 

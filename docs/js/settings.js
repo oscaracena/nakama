@@ -1,5 +1,3 @@
-// FIXME: set root-note, velocity, channels and cc-maps as sliders
-
 class Profile {
    name = null;
    id = Date.now().toString() + Math.random().toString().replace(".", "");

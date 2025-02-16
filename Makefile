@@ -17,7 +17,13 @@ run-rtpmidid-service:
 	rtpmidid
 
 run-jacknetumpd-service:
-	jacknetumpd
+	@jacknetumpd --host zynthian.local --endpoint-name "Nakama" & \
+	sleep 3; \
+	in_src=$$(jack_lsp -A | grep -Ei "midi through.*capture_0"); \
+	out_src=$$(jack_lsp -A | grep -Ei "midi through.*playback_0"); \
+	jack_connect "$$in_src" "jacknetumpd:netump_in"; \
+	jack_connect "$$out_src" "jacknetumpd:netump_out"; \
+	wait
 
 load-virtual-midi:
 	@echo '> NOTE: this is for ALSA <-> OSS only (i.e /dev/midi0)!'
