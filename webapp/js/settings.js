@@ -117,7 +117,7 @@ class SettingsManager extends EventTarget {
    }
 
    async loadColorSet(profile) {
-      const resp = await fetch("/css/themes/colors.json");
+      const resp = await fetch("css/themes/colors.json");
       const colors = await resp.json();
       profile.updateData("midi.colors", colors);
    }
@@ -462,7 +462,7 @@ class SettingsController {
 
       // theme selector
       const themeSelect = $("#sa-theme");
-      fetch("/css/themes/themes.json").then(async (resp) => {
+      fetch("css/themes/themes.json").then(async (resp) => {
          const themes = await resp.json();
          for (let spec of themes) {
             themeSelect.append(`

@@ -2,12 +2,12 @@
     {
         "name": "System",
         "id": "123e4567-e89b-12d3-a456-426614174000",
-        "path": "/css/themes/system.css"
+        "path": "css/themes/system.css"
     },
     {
         "name": "Flat Design",
         "id": "123e4567-e89b-12d3-a456-426614174001",
-        "path": "/css/themes/flat.css",
+        "path": "css/themes/flat.css",
         "default": true
     }
 ]

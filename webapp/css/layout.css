@@ -55,7 +55,7 @@ input[type="number"] {
     font-size: inherit;
 
     appearance: none;
-    background-image: url("/img/caret-down.svg");
+    background-image: url("../img/caret-down.svg");
     background-repeat: no-repeat;
     background-position: right 2rch center;
     background-size: 1.5rch;
