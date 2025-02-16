@@ -3,15 +3,21 @@
 
 This is a Web MIDI controller. It is designed to work as a companion tool for [Zynthian](https://zynthian.org). See more information in the [user manual](docs/MANUAL.md).
 
-![The PADs area of Nakama](docs/img/pads-area.png)
+You can **open the app** here: [Nakama](https://oscaracena.github.io/nakama). It does not need installation, but if you install it, you will use all your device available space (no top address bar), so it is recommended.
+
+![The PADs area of Nakama](docs/manual/img/pads-area.png)
 
 
 ## Requirements
 
-This app relies uses local MIDI devices. To connect to a remote device, you can use RTP-MIDI, or Network MIDI 2.0. For Ubuntu/Debian Linux, install one of these services:
+This app uses local MIDI devices. To connect to a remote endpoint, you can use RTP-MIDI, or Network MIDI 2.0. For **Ubuntu/Debian Linux**, install one of these services:
 
 * https://github.com/oscaracena/jacknetumpd
 * https://github.com/davidmoreno/rtpmidid/releases
+
+And for **Android**, check out this app:
+
+* [Network MIDI 2.0 Virtual Driver](https://github.com/oscaracena/net-midi-vd)
 
 
 ## Development References
