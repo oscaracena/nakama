@@ -444,6 +444,21 @@ class SettingsController {
    // private interface
 
    async #fillWithSettings() {
+      // theme selector
+      const themeSelect = $("#sa-theme");
+      fetch("css/themes/themes.json").then(async (resp) => {
+         const themes = await resp.json();
+         for (let spec of themes) {
+            themeSelect.append(`
+               <option value="${spec.id}" path="${spec.path}"
+               ${spec.default ? 'default="true"': ""}
+               >${spec.name}</option>
+            `);
+            this.log.debug(`system theme added: '${spec.name}'`);
+         }
+         this.log.debug("theme list loaded");
+      });
+
       // profile selector
       const profileSelect = this.#container.find("#sa-profile-name > select");
 
@@ -460,21 +475,6 @@ class SettingsController {
 
       doFillProfileSelector();
       _settings.addEventListener(_settings.EVT_PROFILE_LIST_CHANGED, doFillProfileSelector);
-
-      // theme selector
-      const themeSelect = $("#sa-theme");
-      fetch("css/themes/themes.json").then(async (resp) => {
-         const themes = await resp.json();
-         for (let spec of themes) {
-            themeSelect.append(`
-               <option value="${spec.id}" path="${spec.path}"
-               ${spec.default ? 'default="true"': ""}
-               >${spec.name}</option>
-            `);
-            this.log.debug(`system theme added: '${spec.name}'`);
-         }
-         this.log.debug("theme list loaded");
-      });
 
       // midi ports
       const midiInSelect = $("#sa-midi-in");
