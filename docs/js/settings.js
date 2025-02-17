@@ -454,6 +454,10 @@ class SettingsController {
             `);
             this.log.debug(`system theme added: '${spec.name}'`);
          }
+
+         const userTheme = themeSelect.attr("selected-theme");
+         if (userTheme)
+            themeSelect.val(userTheme).trigger("change");
          this.log.debug("theme list loaded");
       });
 
@@ -537,9 +541,16 @@ class SettingsController {
          profileSelect.val(_settings.currentProfile.id);
 
          // user theme selector
-         const defaultTheme = themeSelect.find("option[default]").val();
-         const userTheme = await _settings.get(themeSelect.attr("p-key"), defaultTheme);
-         themeSelect.val(userTheme).trigger("change");
+         if (themeSelect.find("option").length > 0) {
+            const defaultTheme = themeSelect.find("option[default]").val();
+            const userTheme = await _settings.get(themeSelect.attr("p-key"), defaultTheme);
+            themeSelect.val(userTheme).trigger("change");
+         }
+         else {
+            const userTheme = await _settings.get(themeSelect.attr("p-key"), null);
+            if (userTheme != null)
+               themeSelect.attr("selected-theme", userTheme);
+         }
 
          // vibration toggle
          const vibrationWg = $("#sa-vibrate");

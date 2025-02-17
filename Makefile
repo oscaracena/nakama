@@ -41,5 +41,7 @@ install-local-https-webserver:
 	pip install twisted[tls]
 
 deploy:
+	@version=$$(date +%y.%m.%d); \
+	echo git tag "v$$version";
 	git push origin main:deploy -f
 	xdg-open https://github.com/oscaracena/nakama/deployments

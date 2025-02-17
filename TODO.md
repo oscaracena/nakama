@@ -8,8 +8,12 @@
 * Check that the browser supports every API, and show error/warning message if not
 * Settings: set root-note, velocity, channels and cc-maps as sliders
 * Add support for offline mode
+* UI: add theme with the colors of Zynthian
+* UI: use default color map in function of theme (and add a new one with Zynpad colors)
 
 * PADs: handle incoming MIDI events
+
+* Zynthian: create a basic control driver
 
 
 ## Desktop
@@ -19,5 +23,6 @@
 
 ## Mobile
 
-* If app is not installed, the viewport is displace by address bar, and a part of it is not shown
 * Implement haptic feedback (vibration)
+
+* [DONE] If app is not installed, the viewport is displaced by address bar, and a part of it is not shown --> Fixed using `dvh` instead of `vh`.

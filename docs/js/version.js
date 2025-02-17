@@ -1,0 +1,1 @@
+_syslog.info("Zynthian Nakama v25.2.17");

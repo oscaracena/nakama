@@ -18,6 +18,10 @@ function flattenObject(obj) {
    );
 }
 
+async function sleep(amount) {
+   return new Promise((resolve) => setTimeout(resolve, amount));
+}
+
 function getWithDef(obj, prop, def) {
    const retval = obj[prop];
    return retval === undefined || retval === null ? def : retval;

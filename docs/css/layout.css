@@ -20,7 +20,7 @@
 html,
 body {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     margin: 0;
 
     /* this is to avoid a page reload on swipe down */
@@ -638,7 +638,7 @@ label.switch::after {
 
         grid-area: section;
         width: calc(100% - 2 * var(--margin));
-        height: calc(100vh - var(--top-bar-h) - 2 * var(--margin));
+        height: calc(100dvh - var(--top-bar-h) - 2 * var(--margin));
         overflow-y: auto;
         overflow-x: hidden;
         justify-self: center;
