@@ -75,6 +75,7 @@ class MIDIIface extends EventTarget {
 
    midiEvent(msg) {
       let ev = this.#parseMIDI(msg.data);
+      this.dispatchEvent(new CustomEvent(ev.name, {detail: ev}));
    }
 
    get ports() {
@@ -104,7 +105,6 @@ class MIDIIface extends EventTarget {
    }
 
    #sendEvent(payload) {
-      _("sendEvent:", payload);
       if (this.#outPort)
          this.#outPort.send(payload);
       else
@@ -166,12 +166,22 @@ class MIDIIface extends EventTarget {
       const nibble1 = event.status & 0xF0;
       event.noteOn = nibble1 == MIDI_NOTE_ON;
       event.noteOff = nibble1 == MIDI_NOTE_OFF;
+      event.cc = nibble1 == MIDI_CC;
       event.sysEx = event.status == SYSEX_START;
+
+      event.name = event.noteOn ? "note-on" :
+         event.noteOff ? "note-off" :
+         event.cc ? "cc" :
+         event.sysEx ? "sysex" : "unknown";
 
       if (event.noteOn || event.noteOff) {
          event.channel = event.status & 0x0F;
          event.note = data[1] & 0x7F;
-         event.vel = data[2] & 0x7F;
+         event.velocity = data[2] & 0x7F;
+      }
+      else if (event.cc) {
+         event.number = event.note;
+         event.value = event.velocity;
       }
       else if (event.sysEx) {
          event.devId = data[1] % 0x7F;

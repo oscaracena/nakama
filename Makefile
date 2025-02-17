@@ -40,10 +40,10 @@ run-a2j-bridge:
 install-local-https-webserver:
 	pip install twisted[tls]
 
+deploy: V ?= $(shell date +%y.%m.%d)
 deploy:
-	@version=$$(date +%y.%m.%d); \
-	git tag "v$$version"; \
-	sed -i "s/Zynthian Nakama v[0-9]*\.[0-9]*\.[0-9]*/Zynthian Nakama v$$version/" \
+	@git tag "v$(V)"; \
+	sed -i "s/Zynthian Nakama v[0-9]*\.[0-9]*\.[0-9]*/Zynthian Nakama v$(V)/" \
 		docs/js/version.js; \
 	git push origin main:deploy -f
 	xdg-open https://github.com/oscaracena/nakama/deployments

@@ -19,6 +19,7 @@ class PadsController {
    // public interface
 
    constructor() {
+      // create and connect UI interface
       _ui.createButtonGrid({
          cols: 5, rows: 4,
          containerId: "pa-pads-array",
@@ -42,6 +43,7 @@ class PadsController {
 
       this.#createVelocitySliders();
 
+      // listen for changes on settings
       _settings.addEventListener(
          _settings.EVT_PROFILE_CHANGED, this.#onProfileChanged.bind(this));
       _settings.addEventListener(
@@ -50,6 +52,10 @@ class PadsController {
                return;
             this.#onSettingsChanged(ev.detail.path, ev.detail.value);
          });
+
+      // listen for incoming MIDI events
+      _midi.addEventListener("note-on", (ev) => this.#onNoteOn(ev.detail));
+
       this.log.debug("controller ready");
    }
 
@@ -322,5 +328,9 @@ class PadsController {
 
    #showPadVelocities(show) {
       $(".pad-vel-overlay").toggle(show);
+   }
+
+   #onNoteOn(note) {
+      _(note);
    }
 }

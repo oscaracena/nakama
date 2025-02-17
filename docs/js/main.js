@@ -4,7 +4,7 @@ function checkAPICompat() {
 }
 
 $(window).on("load", async function () {
-   _ui = new UIManager("app-container", "settings");
+   _ui = new UIManager("app-container", "pads");
 
    const compat = checkAPICompat();
    if (!compat.ok) {
