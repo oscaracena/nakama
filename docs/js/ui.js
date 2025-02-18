@@ -79,6 +79,8 @@ class UIManager {
    }
 
    createButtonGrid(opts) {
+      const buttons = [];
+
       if (opts.cssClass && opts.cssClass.call === undefined) {
          const cssClass = opts.cssClass;
          opts.cssClass = () => cssClass;
@@ -126,8 +128,10 @@ class UIManager {
                btn.on(ev, cb);
             }
             container.append(btn);
+            buttons.push(btn);
          }
       }
+      return buttons;
    }
 
    showUndoMsg(elemId, msg, rollbackFn) {
@@ -180,6 +184,19 @@ class UIManager {
       const elem = $(elemId);
       elem.on("pointerdown", () => elem.addClass("active"));
       elem.on("pointerup", () => elem.removeClass("active"));
+   }
+
+   stopAnimations(elem) {
+      elem.getAnimations().forEach((anim) => {
+          anim.cancel();
+      });
+   }
+
+   syncAnimations(elem) {
+      elem.getAnimations({subtree: true}).forEach((anim) => {
+          anim.cancel();
+          anim.play();
+      });
    }
 }
 

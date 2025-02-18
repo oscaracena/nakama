@@ -1,5 +1,6 @@
 class PadsController {
    log = new Logger("PadsCtrl");
+   #area = $("#pads-area");
 
    #shift = false;
    #shiftCancel = new AbortController();
@@ -13,6 +14,9 @@ class PadsController {
    #rowLaunchCCs = [];
    #ccMap = {};
    #velMap = [];
+   #colorMap = [];
+   #pads = [];
+
    #channelA;
    #channelB;
 
@@ -20,7 +24,7 @@ class PadsController {
 
    constructor() {
       // create and connect UI interface
-      _ui.createButtonGrid({
+      this.#pads = _ui.createButtonGrid({
          cols: 5, rows: 4,
          containerId: "pa-pads-array",
          columnSizes: 'repeat(4, 1fr) auto',
@@ -36,6 +40,11 @@ class PadsController {
          onPress: this.#onPadPress.bind(this),
          onRelease: this.#onPadRelease.bind(this),
       });
+
+      // remove ".btn-row-launch" from #pads and sort them by 'btn-index'
+      this.#pads = this.#pads.filter(btn => !$(btn).hasClass("btn-row-launch"));
+      this.#pads.sort((a, b) =>
+         parseInt($(a).attr("btn-index")) - parseInt($(b).attr("btn-index")));
 
       _ui.handleActiveClass("#pa-rec-btn");
       _ui.handleActiveClass("#pa-stop-btn");
@@ -174,6 +183,8 @@ class PadsController {
       for (const [key, value] of Object.entries(ccmap)) {
          this.#onSettingsChanged(`pads.map.${key}`, value);
       }
+
+      this.#colorMap = await _settings.get("midi.colors", []);
    }
 
    #onSettingsChanged(path, value) {
@@ -330,7 +341,22 @@ class PadsController {
       $(".pad-vel-overlay").toggle(show);
    }
 
-   #onNoteOn(note) {
-      _(note);
+   #onNoteOn(event) {
+      _(event);
+      const btn = this.#getRelatedButton(event);
+      if (btn) {
+         const color = getWithDef(this.#colorMap, event.velocity, 0);
+         this.#setButtonColor(btn, color);
+      }
+   }
+
+   #getRelatedButton(event) {
+      if (event.channel == this.#channelA)
+         return this.#pads[event.note];
+   }
+
+   #setButtonColor(btn, color) {
+      const hexColor = `#${color.toString(16).padStart(6, '0')}`;
+      btn.css("--border-color", hexColor);
    }
 }
