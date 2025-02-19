@@ -356,10 +356,8 @@ class PadsController {
    }
 
    #onNoteEvent(event) {
-      _(event);
       if (event.channel != this.#channelA)
          return;
-
       const btn = this.#buttons[event.note] || this.#buttons[event.control];
       if (!btn)
          return;
@@ -376,7 +374,21 @@ class PadsController {
       else if (event.cc) {
          const effect = (event.value & 0xF0) >> 4;
          const amount = event.value & 0x0F;
-         _(`CC event, effect: ${effect}, amount: ${amount}`);
+         const time = 2000 - (amount * 125);
+
+         btn.removeClass(["blink-effect", "pulse-effect"]);
+         switch (effect) {
+            case 1:
+               btn.addClass("blink-effect");
+               btn.css("--effect-time", `${time}ms`);
+               _ui.syncAnimations(this.#area[0]);
+               break;
+            case 2:
+               btn.addClass("pulse-effect");
+               btn.css("--effect-time", `${time}ms`);
+               _ui.syncAnimations(this.#area[0]);
+               break;
+         }
       }
    }
 
@@ -385,5 +397,7 @@ class PadsController {
       if (color !== null)
          value = `#${color.toString(16).padStart(6, '0')}`;
       btn.css("--user-color", value);
+      if (value == "")
+         btn.removeClass(["blink-effect", "pulse-effect"]);
    }
 }

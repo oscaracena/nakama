@@ -23,7 +23,9 @@ Near each row of PADs there is another button that will send CC messages (acordi
 
 #### Buttons state
 
-Some buttons on this area (namely, the PADs, row LAUNCH and transpose buttons) can be controlled with incoming messages on `Channel A`. First 16 notes (0-15) are for the PADs, notes from 16 to 19 are the row LAUNCH buttons, and then goes rec (20), stop (21) and play/pause (22). A Note-On message is used to change its color, taking the velocity as the index for a color mapping (which you can change in the settings area). A Note-Of message will reset the color to its default state. And a CC message will be used to change some effects of the button, depending on the given value. The left four bits (only 3 are used, from 0 to 7) indicates the effect, and the remaining bits (16 values) are the amount of the effect to be applied. The available effects are given in the following table:
+Some buttons on this area (namely, the PADs, row LAUNCH and transpose buttons) can be controlled with incoming messages on `Channel A`. First 16 notes (0-15) are for the PADs, notes from 16 to 19 are the row LAUNCH buttons, and then goes rec (20), stop (21) and play/pause (22). A Note-On message is used to change its color, taking the velocity as the index for a color mapping (which you can change in the settings area). A CC message will change some effects of the button, depending on the given value. And a Note-Of message will reset the color to its default state, and remove any applied effect.
+
+The value used for the effect has the following format: the left four bits (only 3 are used, from 0 to 7) indicates the effect, and the remaining bits (16 values) are the amount of the effect to be applied. The available effects are given in the following table:
 
 | Effect Code | Effect Name | Description                               | Parameter         |
 |-------------|-------------|-------------------------------------------|-------------------|
@@ -38,7 +40,7 @@ And the range of speed values, from 2000 ms to 50 ms, is as follows:
 | 0     | 2000       | 4     | 1500       | 8     | 1000       | C     | 500        |
 | 1     | 1875       | 5     | 1375       | 9     | 875        | D     | 375        |
 | 2     | 1750       | 6     | 1250       | A     | 750        | E     | 250        |
-| 3     | 1625       | 7     | 1125       | B     | 625        | F     | 50         |
+| 3     | 1625       | 7     | 1125       | B     | 625        | F     | 125        |
 
 For example, sending a CC message with 0x1A as value, instructs the button to blink at 750 ms (the cycle will be 750 ms, so half of the time will be on, and the other half will be off).
 

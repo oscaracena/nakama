@@ -45,7 +45,6 @@ class ColorTester:
         for control in range(start, end):
             msg = mido.Message(event, control=control, value=effect, channel=self.args.channel)
             self.port.send(msg)
-            effect += 1
 
 
 if __name__ == "__main__":

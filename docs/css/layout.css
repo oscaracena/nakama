@@ -36,6 +36,9 @@ body {
     @media (orientation: portrait) {
         overflow: hidden;
     }
+
+    scrollbar-color: var(--color-on-surface) var(--color-surface);
+    scrollbar-width: thin;
 }
 
 body {
