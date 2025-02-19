@@ -338,7 +338,7 @@ label.switch::after {
 
 .btn-pad {
     --border-size: 1.5vh;
-    --border-color: var(--color-secondary);
+    --border-color: var(--user-color, var(--color-secondary));
 
     display: flex;
     justify-content: flex-end;
@@ -362,10 +362,10 @@ label.switch::after {
 
 .btn-row-launch {
     --border-size: 0.8vh;
-    --border-color: var(--color-secondary);
+    --border-color: var(--user-color, var(--color-secondary));
 
-    background-color: transparent;
-    border: var(--border-size) solid var(--border-color);
+    background-color: var(--user-color, transparent);
+    border: var(--border-size) solid var(--user-color, var(--border-color));
     border-radius: 50%;
     aspect-ratio: 1 / 1;
     width: 7rch;
@@ -388,7 +388,7 @@ label.switch::after {
 @layer {
     #pa-controls .btn {
         --border-size: 0.8vh;
-        --border-color: var(--color-secondary);
+        --border-color: var(--user-color, var(--color-secondary));
         --fg-color: var(--color-orange);
         --fa-inverse: var(--color-surface);
 
@@ -422,17 +422,17 @@ label.switch::after {
 }
 
 #pa-rec-btn {
-    --fg-color: var(--color-on-primary-container);
+    --fg-color: var(--user-color, var(--color-on-primary-container));
     grid-area: rec;
 }
 
 #pa-stop-btn {
-    --fg-color: var(--color-on-primary-container);
+    --fg-color: var(--user-color, var(--color-on-primary-container));
     grid-area: stop;
 }
 
 #pa-play-btn {
-    --fg-color: var(--color-on-primary-container);
+    --fg-color: var(--user-color, var(--color-on-primary-container));
     grid-area: play;
 }
 
@@ -838,6 +838,13 @@ label.switch::after {
         rgba(0, 0, 0, 0.4) 0px 2px 4px,
         rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
         rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+#sa-color-maps .btn.color-picker-active::before {
+    content: attr(color-index);
+    font-weight: bold;
+    font-size: 0.8em;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 #sa-color-maps .btn.idx-bl::after,

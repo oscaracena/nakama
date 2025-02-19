@@ -15,7 +15,9 @@ class PadsController {
    #ccMap = {};
    #velMap = [];
    #colorMap = [];
-   #pads = [];
+
+   // hold buttons for faster access on incoming events
+   #buttons = [];
 
    #channelA;
    #channelB;
@@ -24,7 +26,7 @@ class PadsController {
 
    constructor() {
       // create and connect UI interface
-      this.#pads = _ui.createButtonGrid({
+      const buttons = _ui.createButtonGrid({
          cols: 5, rows: 4,
          containerId: "pa-pads-array",
          columnSizes: 'repeat(4, 1fr) auto',
@@ -41,10 +43,20 @@ class PadsController {
          onRelease: this.#onPadRelease.bind(this),
       });
 
-      // remove ".btn-row-launch" from #pads and sort them by 'btn-index'
-      this.#pads = this.#pads.filter(btn => !$(btn).hasClass("btn-row-launch"));
-      this.#pads.sort((a, b) =>
-         parseInt($(a).attr("btn-index")) - parseInt($(b).attr("btn-index")));
+      // sort buttons: 0-15 are PADs, 16-19 are row LAUNCHers, and then transpose buttons
+      const pads = buttons.filter(
+         btn => btn.hasClass("btn-pad")).sort((a, b) =>
+            parseInt(a.attr("btn-index")) - parseInt(b.attr("btn-index")));
+      const rowLaunch = buttons.filter(
+         btn => btn.hasClass("btn-row-launch")).sort((a, b) =>
+            parseInt(a.attr("btn-index")) - parseInt(b.attr("btn-index")));
+      this.#buttons = [
+         ...pads,
+         ...rowLaunch,
+         $("#pa-rec-btn"),
+         $("#pa-stop-btn"),
+         $("#pa-play-btn"),
+      ];
 
       _ui.handleActiveClass("#pa-rec-btn");
       _ui.handleActiveClass("#pa-stop-btn");
@@ -63,7 +75,9 @@ class PadsController {
          });
 
       // listen for incoming MIDI events
-      _midi.addEventListener("note-on", (ev) => this.#onNoteOn(ev.detail));
+      _midi.addEventListener("note-on", (ev) => this.#onNoteEvent(ev.detail));
+      _midi.addEventListener("note-off", (ev) => this.#onNoteEvent(ev.detail));
+      _midi.addEventListener("cc", (ev) => this.#onNoteEvent(ev.detail));
 
       this.log.debug("controller ready");
    }
@@ -341,22 +355,35 @@ class PadsController {
       $(".pad-vel-overlay").toggle(show);
    }
 
-   #onNoteOn(event) {
+   #onNoteEvent(event) {
       _(event);
-      const btn = this.#getRelatedButton(event);
-      if (btn) {
-         const color = getWithDef(this.#colorMap, event.velocity, 0);
+      if (event.channel != this.#channelA)
+         return;
+
+      const btn = this.#buttons[event.note] || this.#buttons[event.control];
+      if (!btn)
+         return;
+
+      if (event.noteOn || event.noteOff) {
+         let color = null;
+         if (event.noteOn) {
+            color = this.#colorMap[event.velocity];
+            if (color == null || isNaN(color))
+               color = 0xc1f400;
+         }
          this.#setButtonColor(btn, color);
+      }
+      else if (event.cc) {
+         const effect = (event.value & 0xF0) >> 4;
+         const amount = event.value & 0x0F;
+         _(`CC event, effect: ${effect}, amount: ${amount}`);
       }
    }
 
-   #getRelatedButton(event) {
-      if (event.channel == this.#channelA)
-         return this.#pads[event.note];
-   }
-
    #setButtonColor(btn, color) {
-      const hexColor = `#${color.toString(16).padStart(6, '0')}`;
-      btn.css("--border-color", hexColor);
+      let value = "";
+      if (color !== null)
+         value = `#${color.toString(16).padStart(6, '0')}`;
+      btn.css("--user-color", value);
    }
 }

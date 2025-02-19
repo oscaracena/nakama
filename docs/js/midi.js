@@ -180,8 +180,9 @@ class MIDIIface extends EventTarget {
          event.velocity = data[2] & 0x7F;
       }
       else if (event.cc) {
-         event.number = event.note;
-         event.value = event.velocity;
+         event.channel = event.status & 0x0F;
+         event.control = data[1] & 0x7F;;
+         event.value = data[2] & 0x7F;
       }
       else if (event.sysEx) {
          event.devId = data[1] % 0x7F;

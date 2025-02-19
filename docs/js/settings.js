@@ -638,7 +638,7 @@ class SettingsController {
                return "btn idx-tr";
             return col == 4 ? "btn" : "btn";
          },
-         attributes: (row, col) => 'data-coloris',
+         attributes: (row, col) => `data-coloris color-index="${start + col * cols + row}"`,
          btnId: (col, row) => {
             return `sa-color-btn-${start + row * cols + col}`;
          },
