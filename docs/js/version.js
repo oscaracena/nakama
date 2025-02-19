@@ -1,1 +1,1 @@
-_syslog.info("Zynthian Nakama v25.02.17");
+_syslog.info("Zynthian Nakama v25.02.19");
