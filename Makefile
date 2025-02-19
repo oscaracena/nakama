@@ -42,8 +42,11 @@ install-local-https-webserver:
 
 deploy: V ?= $(shell date +%y.%m.%d)
 deploy:
-	@git tag "v$(V)"; \
 	sed -i "s/Zynthian Nakama v[0-9]*\.[0-9]*\.[0-9]*/Zynthian Nakama v$(V)/" \
-		docs/js/version.js; \
+		docs/js/version.js;
+	git tag "v$(V)"
+	git add docs/js/version.js
+	git ci -m "Update release version"
+	git push --tags
 	git push origin main:deploy -f
 	xdg-open https://github.com/oscaracena/nakama/deployments
