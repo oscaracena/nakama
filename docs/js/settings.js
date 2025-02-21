@@ -485,19 +485,41 @@ class SettingsController {
          if (!isReady)
             return;
 
+         const outNames = {};
          for (const entry of _midi.ports.out) {
-            const output = entry[1];
+            const port = entry[1];
+            if (!outNames[port.name])
+               outNames[port.name] = [0, 0];
+            outNames[port.name][0]++;
+         }
+
+         for (const entry of _midi.ports.out) {
+            const port = entry[1];
+            let name = port.name;
+            if (outNames[port.name][0] > 1)
+               name = `${port.name} [${++outNames[port.name][1]}]`;
             midiOutSelect.append(`
-               <option value="${output.id}" label="${output.name}">
-               ${output.name}</option>
+               <option value="${port.id}" label="${name}">
+               ${name}</option>
             `);
          }
 
+         const inNames = {};
          for (const entry of _midi.ports.in) {
-            const input = entry[1];
+            const port = entry[1];
+            if (!inNames[port.name])
+               inNames[port.name] = [0, 0];
+            inNames[port.name][0]++;
+         }
+
+         for (const entry of _midi.ports.in) {
+            const port = entry[1];
+            let name = port.name;
+            if (inNames[port.name][0] > 1)
+               name = `${port.name} [${++inNames[port.name][1]}]`;
             midiInSelect.append(`
-               <option value="${input.id}" label="${input.name}">
-               ${input.name}</option>
+               <option value="${port.id}" label="${name}">
+               ${name}</option>
             `);
          }
       });
@@ -569,7 +591,6 @@ class SettingsController {
          }
 
          // midi ports
-         // FIXME: if some port is not found, show a warning icon on the bar
          const userMidiIn = await _settings.get(midiInSelect.attr("p-key"), {});
          const userMidiOut = await _settings.get(midiOutSelect.attr("p-key"), {});
          midiInSelect.val(userMidiIn.id);

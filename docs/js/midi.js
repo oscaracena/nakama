@@ -12,23 +12,6 @@ const MIDI_NOTE_ON    = 0x90;
 const MIDI_NOTE_OFF   = 0x80;
 const MIDI_CC         = 0xB0;
 
-// const LED_BRIGHT_10   = 0x00;
-// const LED_BRIGHT_25   = 0x01;
-// const LED_BRIGHT_50   = 0x02;
-// const LED_BRIGHT_65   = 0x03;
-// const LED_BRIGHT_75   = 0x04;
-// const LED_BRIGHT_90   = 0x05;
-// const LED_BRIGHT_100  = 0x06;
-// const LED_PULSING_16  = 0x07;
-// const LED_PULSING_8   = 0x08;
-// const LED_PULSING_4   = 0x09;
-// const LED_PULSING_2   = 0x0A;
-// const LED_BLINKING_24 = 0x0B;
-// const LED_BLINKING_16 = 0x0C;
-// const LED_BLINKING_8  = 0x0D;
-// const LED_BLINKING_4  = 0x0E;
-// const LED_BLINKING_2  = 0x0F;
-
 
 class MIDIIface extends EventTarget {
    #midi = null;
